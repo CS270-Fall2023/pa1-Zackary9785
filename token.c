@@ -1,7 +1,7 @@
 /**
- * @file token.c
+ * @file token.h
  * @author Zackary Morrow
- * @brief implementation file
+ * @brief declaration file
  * @version 0.1
  * @date 2023-09-11
  * 
@@ -9,10 +9,12 @@
  * 
  */
 
-#include "token.h"
+#ifndef TOKEN_H
+#define TOKEN_H
 
-int getTokens(char *s, char ***args)
-{
-    
-    return 0;
-}
+#include <stdio.h>
+#include <stdlib.h>
+
+int getTokens(char *s, char **args[]);
+
+#endif
