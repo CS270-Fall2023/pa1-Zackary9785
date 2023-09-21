@@ -1,3 +1,8 @@
+all: token
+
+clean: 
+	rm -f token *.o
+
 token: main.o token.o
 	gcc main.o token.o -o token
 
