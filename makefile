@@ -1,13 +1,17 @@
+#macros
+CC = gcc
+FLAGS = -Wall -g
+
 all: token
 
 clean: 
 	rm -f token *.o
 
 token: main.o token.o
-	gcc main.o token.o -o token
+	$(CC) $(FLAGS) main.o token.o -o token
 
 main.o: main.c token.h
-	gcc -c main.c
+	$(CC) $(FLAGS) -c main.c
 
 token.o: token.c token.h
-	gcc -c token.c
+	$(CC) $(FLAGS) -c token.c

@@ -14,7 +14,7 @@
 int getTokens(char *s, char **args[])
 {
     int numberOfTokens = 0;
-    char test[100];
+    //char test[100];
     (*args) = malloc(sizeof(char*)*100);
     //strncpy((*args)[numberoftokens-1], s+stringstart, stringend-stringstart) //copy current token
     int lenOfSubString;
