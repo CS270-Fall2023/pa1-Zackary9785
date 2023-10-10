@@ -8,56 +8,76 @@
  * @copyright Copyright (c) 2023
  * 
  */
-
 #include "token.h"
 
-int getTokens(char *s, char **args[])
+#define MAX_TOKENS 100
+
+/**
+ * @brief split the string into tokens and add them to an array
+ * 
+ * @param s is the string to be tokenized
+ * @param args is the array that will hold the tokens
+ * @return the number of tokens
+ */
+int getTokens(char* s, char**args[]) 
 {
-    int numberOfTokens = 0;
-    //char test[100];
-    (*args) = malloc(sizeof(char*)*100);
-    //strncpy((*args)[numberoftokens-1], s+stringstart, stringend-stringstart) //copy current token
-    int lenOfSubString;
-    int j=0;
-    int stringStart = 0;
-    int stringEnd = 0;
-    
-    for(int i=0; i<strlen(s)+1; i++)
+    int tokenCount = 0;
+    char* copy = strdup(s); // Create a copy of the input string so we don't change the original
+
+    if (copy == NULL) 
     {
-        if(s[i]!=' ')
-        {
-            j++;
-            stringEnd++;
-            //printf("%d\n stringEnd is: ", stringEnd);
-        }
-        else
-        {
-            stringEnd = 0;
-            stringStart++;
-        }
-            
-        
-        //printf("%s\n", str+i);
-        if((s[i] == ' ' && s[i+1] != ' ') || s[i] == '\0')
-        {
-            // if(s[i] == ' ')
-            // {
-            //     stringStart++;
-            // }
-            if(s[i]=='\0')
-                j--;
-            lenOfSubString = j;
-            //printf("%s\n", s+stringStart);
-            //strncpy(test, s+stringStart, lenOfSubString);
-            (*args)[0]=malloc(sizeof(char)*lenOfSubString+1);
-            strncpy(*args[0], s, lenOfSubString);
-            printf("Length of substring is: %i\n", lenOfSubString);
-            printf("found space or null\n");
-            //copy length lenOfSubString substring of str into array
-            j=0;
-            numberOfTokens++;
-            //printf("%s", test[0]);
-        }    
+        perror("Memory allocation error");
+        return -1; // Error
     }
-    return numberOfTokens;
+
+    char* token_start = copy;
+    char* token_end = strstr(token_start, " "); //says end of token is the space after characters
+
+    while (token_start != NULL) 
+    {
+        if (tokenCount >= MAX_TOKENS) 
+        {
+            // Error, more tokens than space allocated
+            return -1;
+        }
+
+        if (token_end != NULL) 
+        {
+            *token_end = '\0'; // Null terminate the token
+            if (strlen(token_start) > 0) 
+            {
+                (*args)[tokenCount] = strdup(token_start);
+                tokenCount++;
+            }
+
+            token_start = token_end + strlen(" "); // Move to the next token
+            while (*token_start == ' ') 
+            {
+                token_start++; // Skip additional spaces
+            }
+            token_end = strstr(token_start, " ");   //searching for " " substring to end the token
+        } 
+        else 
+        {
+            // Last token or no more tokens
+            if (strlen(token_start) > 0) 
+            {
+                (*args)[tokenCount] = strdup(token_start);
+
+                if ((*args)[tokenCount] == NULL) 
+                {
+                    perror("Memory allocation error");
+                    return -1; // Error: Unable to allocate memory for the last token
+                }
+
+                tokenCount++;
+            }
+
+            break;
+        }
+    }
+
+    free(copy); // Free the copy of the input string
+    //printf("Number of tokens: %d\n", tokenCount);
+    return tokenCount;
 }
